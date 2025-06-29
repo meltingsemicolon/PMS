@@ -1,1 +1,1 @@
-# PMS project
+# PMS (Prison management system) project 
