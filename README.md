@@ -59,7 +59,53 @@ npm run build
 npm start
 ```
 
-## 🔐 Demo Accounts
+## � Deploying to Vercel
+
+This project is optimized for deployment on Vercel. Follow these steps:
+
+### 1. Quick Deploy
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-username/prison-management-system)
+
+### 2. Manual Deployment
+
+1. **Install Vercel CLI**
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Login to Vercel**
+   ```bash
+   vercel login
+   ```
+
+3. **Deploy**
+   ```bash
+   vercel --prod
+   ```
+
+### 3. GitHub Integration
+
+1. Push your code to GitHub
+2. Connect your GitHub account to Vercel
+3. Import your repository
+4. Vercel will automatically deploy on every push to main branch
+
+### Environment Variables
+
+If you need environment variables for production:
+1. Copy `.env.example` to `.env.local`
+2. Fill in your production values
+3. Add them to your Vercel project settings
+
+### Build Settings
+
+The project includes optimized Vercel configuration:
+- **Build Command**: `npm run build`
+- **Output Directory**: `.next`
+- **Install Command**: `npm install`
+- **Node.js Version**: 20.x
+
+## �🔐 Demo Accounts
 
 The system includes pre-configured demo accounts for testing:
 
