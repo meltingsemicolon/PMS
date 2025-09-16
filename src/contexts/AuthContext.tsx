@@ -78,6 +78,7 @@ const DEMO_USERS: User[] = [
 // Demo passwords
 const DEMO_PASSWORDS: Record<string, string> = {
   admin: 'admin123',
+  pratima: 'Userpratima@123',
   warden: 'warden123',
   officer1: 'officer123',
   medical1: 'medical123',
