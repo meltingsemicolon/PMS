@@ -33,7 +33,7 @@ const DEMO_USERS: User[] = [
     department: 'Administration',
     permissions: ['all']
   },
-  {name:'Quality Analyst Pratima maam',
+  {name:'Pratima maam',
     id:'123',
     username:'Pratima',
     role: USER_ROLES.ADMIN,
@@ -78,7 +78,7 @@ const DEMO_USERS: User[] = [
 // Demo passwords
 const DEMO_PASSWORDS: Record<string, string> = {
   admin: 'admin123',
-  pratima: 'Userpratima@123',
+  Pratima: 'Userpratima@123',
   warden: 'warden123',
   officer1: 'officer123',
   medical1: 'medical123',
