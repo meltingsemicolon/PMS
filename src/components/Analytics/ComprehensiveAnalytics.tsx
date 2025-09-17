@@ -13,32 +13,27 @@ import {
   PieChart,
   Pie,
   Cell,
-  LineChart,
   Line,
   Area,
-  AreaChart,
   ComposedChart,
   Legend
 } from 'recharts';
 import { 
   TrendingUp, 
-  Calendar, 
   Users, 
   AlertTriangle,
   Activity,
   Shield,
   Eye,
   Download,
-  Filter,
   RefreshCw
 } from 'lucide-react';
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#0088fe', '#00C49F', '#ffbb28', '#ff8042'];
 
 export const ComprehensiveAnalytics: React.FC = () => {
-  const { getAdvancedAnalytics, getDashboardStats, inmates, staff, securityIncidents, medicalRecords } = useData();
+  const { getAdvancedAnalytics, getDashboardStats, inmates, staff, securityIncidents } = useData();
   const [selectedTimeFrame, setSelectedTimeFrame] = useState<'week' | 'month' | 'quarter' | 'year'>('month');
-  const [selectedMetric, setSelectedMetric] = useState<'all' | 'inmates' | 'staff' | 'incidents' | 'medical'>('all');
   
   const analytics = getAdvancedAnalytics();
   const stats = getDashboardStats();
@@ -46,7 +41,7 @@ export const ComprehensiveAnalytics: React.FC = () => {
   // Prepare trend data (mock data - in real app this would come from historical data)
   const getTrendData = () => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return months.map((month, index) => ({
+    return months.map((month) => ({
       month,
       inmates: Math.floor(Math.random() * 50) + stats.totalInmates - 25,
       incidents: Math.floor(Math.random() * 10) + 5,
@@ -128,7 +123,7 @@ export const ComprehensiveAnalytics: React.FC = () => {
     title: string; 
     value: string | number; 
     change: string; 
-    icon: React.ComponentType<any>; 
+    icon: React.ComponentType<{ className?: string; style?: React.CSSProperties }>; 
     color: string 
   }> = ({ title, value, change, icon: Icon, color }) => (
     <div className="bg-white rounded-lg shadow-md p-6 border-l-4" style={{ borderLeftColor: color }}>
@@ -160,7 +155,7 @@ export const ComprehensiveAnalytics: React.FC = () => {
           <div className="flex space-x-4">
             <select
               value={selectedTimeFrame}
-              onChange={(e) => setSelectedTimeFrame(e.target.value as any)}
+              onChange={(e) => setSelectedTimeFrame(e.target.value as 'week' | 'month' | 'quarter' | 'year')}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
               <option value="week">Last Week</option>
