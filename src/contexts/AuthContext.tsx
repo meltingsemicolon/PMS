@@ -47,7 +47,7 @@ const DEMO_USERS: User[] = [
     name: 'John Warden',
     role: USER_ROLES.WARDEN,
     department: 'Management',
-    permissions: ['inmates', 'staff', 'security', 'reports']
+    permissions: ['inmates', 'staff', 'security', 'reports', 'resources']
   },
   {
     id: '3',
