@@ -33,13 +33,13 @@ const DEMO_USERS: User[] = [
     department: 'Administration',
     permissions: ['all']
   },
-  {name:'Pratima maam',
-    id:'123',
-    username:'Pratima',
+  {
+    id: '123',
+    username: 'Pratima',
+    name: 'Pratima maam',
     role: USER_ROLES.ADMIN,
     department: 'Administration',
     permissions: ['all']
-
   },
   {
     id: '2',

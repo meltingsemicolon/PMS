@@ -12,6 +12,10 @@ export default function SecurityPage() {
   const [typeFilter, setTypeFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [expandedDescriptions, setExpandedDescriptions] = useState<Set<string>>(new Set());
+  const [selectedIncident, setSelectedIncident] = useState<any>(null);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [formData, setFormData] = useState({
     type: '' as 'fight' | 'contraband' | 'escape_attempt' | 'other' | '',
     description: '',
@@ -22,6 +26,36 @@ export default function SecurityPage() {
     reportedBy: '',
     involvedInmates: [] as string[]
   });
+
+  const toggleDescription = (incidentId: string) => {
+    const newExpanded = new Set(expandedDescriptions);
+    if (newExpanded.has(incidentId)) {
+      newExpanded.delete(incidentId);
+    } else {
+      newExpanded.add(incidentId);
+    }
+    setExpandedDescriptions(newExpanded);
+  };
+
+  const handleViewIncident = (incident: any) => {
+    setSelectedIncident(incident);
+    setShowViewModal(true);
+  };
+
+  const handleEditIncident = (incident: any) => {
+    setSelectedIncident(incident);
+    setFormData({
+      type: incident.type,
+      description: incident.description,
+      location: incident.location,
+      date: incident.date,
+      time: incident.time,
+      severity: incident.severity,
+      reportedBy: incident.reportedBy,
+      involvedInmates: incident.involvedInmates || []
+    });
+    setShowEditModal(true);
+  };
 
   // Filter security incidents
   let filteredIncidents = securityIncidents;
@@ -225,32 +259,32 @@ export default function SecurityPage() {
 
           {/* Incidents Table */}
           <div className="bg-white shadow rounded-lg overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
+            <div className="overflow-hidden">
+              <table className="w-full table-fixed divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/3">
                       Incident
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="hidden sm:table-cell px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
                       Location
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
                       Date & Time
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Involved Inmates
+                    <th className="hidden md:table-cell px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
+                      Inmates
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">
                       Severity
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="hidden lg:table-cell px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="hidden sm:table-cell px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">
                       Reporter
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">
                       Actions
                     </th>
                   </tr>
@@ -258,63 +292,106 @@ export default function SecurityPage() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {filteredIncidents.map((incident) => (
                     <tr key={incident.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center">
-                          <AlertTriangle className="h-5 w-5 text-red-500 mr-3" />
-                          <div>
+                      <td className="px-3 py-4">
+                        <div className="flex items-start">
+                          <AlertTriangle className="h-4 w-4 text-red-500 mr-2 mt-0.5 flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
                             <div className="text-sm font-medium text-gray-900 capitalize">
                               {incident.type.replace('_', ' ')}
                             </div>
-                            <div className="text-sm text-gray-500 max-w-xs truncate">
-                              {incident.description}
+                            <div className="text-sm text-gray-500">
+                              {expandedDescriptions.has(incident.id) ? (
+                                <>
+                                  <p className="whitespace-pre-wrap">{incident.description}</p>
+                                  <button
+                                    onClick={() => toggleDescription(incident.id)}
+                                    className="mt-1 text-blue-600 hover:text-blue-800 text-xs font-medium focus:outline-none"
+                                  >
+                                    Show less
+                                  </button>
+                                </>
+                              ) : (
+                                <>
+                                  <p className="break-words">
+                                    {incident.description.length > 80 
+                                      ? `${incident.description.substring(0, 80)}...` 
+                                      : incident.description
+                                    }
+                                  </p>
+                                  {incident.description.length > 80 && (
+                                    <button
+                                      onClick={() => toggleDescription(incident.id)}
+                                      className="mt-1 text-blue-600 hover:text-blue-800 text-xs font-medium focus:outline-none"
+                                    >
+                                      Show more
+                                    </button>
+                                  )}
+                                </>
+                              )}
                             </div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {incident.location}
+                      <td className="hidden sm:table-cell px-3 py-4 text-sm text-gray-900">
+                        <div className="truncate max-w-20">{incident.location}</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <div>{new Date(incident.date).toLocaleDateString()}</div>
-                        <div className="text-gray-500">{incident.time}</div>
+                      <td className="px-3 py-4 text-sm text-gray-900">
+                        <div className="text-xs">{new Date(incident.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
+                        <div className="text-xs text-gray-500">{incident.time}</div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="hidden md:table-cell px-3 py-4">
                         <div className="text-sm text-gray-900">
                           {incident.involvedInmatesNames?.length > 0 ? (
-                            incident.involvedInmatesNames.map((name, index) => (
-                              <div key={index} className="mb-1">
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                  {name}
+                            <div className="flex flex-wrap gap-1">
+                              {incident.involvedInmatesNames.slice(0, 2).map((name, index) => (
+                                <span
+                                  key={index}
+                                  className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                                >
+                                  {name.split(' ')[0]}
                                 </span>
-                              </div>
-                            ))
+                              ))}
+                              {incident.involvedInmatesNames.length > 2 && (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                  +{incident.involvedInmatesNames.length - 2}
+                                </span>
+                              )}
+                            </div>
                           ) : (
-                            <span className="text-gray-400">No inmates involved</span>
+                            <span className="text-gray-400 text-xs">None</span>
                           )}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-3 py-4 text-sm">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full capitalize ${getSeverityColor(incident.severity)}`}>
                           {incident.severity}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="hidden lg:table-cell px-3 py-4 text-sm">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full capitalize ${getStatusColor(incident.status)}`}>
                           {incident.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{incident.reportedBy}</div>
+                      <td className="hidden sm:table-cell px-3 py-4 text-sm">
+                        <div className="text-sm text-gray-900 truncate max-w-20">{incident.reportedBy}</div>
                         {incident.reportedByBadge && (
-                          <div className="text-xs text-gray-500">Badge: {incident.reportedByBadge}</div>
+                          <div className="text-xs text-gray-500">#{incident.reportedByBadge}</div>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div className="flex space-x-2">
-                          <button className="text-blue-600 hover:text-blue-900">
+                      <td className="px-3 py-4 text-sm font-medium">
+                        <div className="flex space-x-1">
+                          <button 
+                            onClick={() => handleViewIncident(incident)}
+                            className="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-50 transition-colors"
+                            title="View Details"
+                          >
                             <Eye className="h-4 w-4" />
                           </button>
-                          <button className="text-green-600 hover:text-green-900">
+                          <button 
+                            onClick={() => handleEditIncident(incident)}
+                            className="text-green-600 hover:text-green-900 p-1 rounded hover:bg-green-50 transition-colors"
+                            title="Edit Incident"
+                          >
                             <Edit className="h-4 w-4" />
                           </button>
                         </div>
@@ -513,6 +590,277 @@ export default function SecurityPage() {
                     </button>
                   </div>
                 </form>
+              </div>
+            </div>
+          )}
+
+          {/* View Details Modal */}
+          {showViewModal && selectedIncident && (
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+              <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white">
+                <div className="mt-3">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-medium text-gray-900 flex items-center">
+                      <AlertTriangle className="h-5 w-5 text-red-500 mr-2" />
+                      Incident Details
+                    </h3>
+                    <button
+                      onClick={() => setShowViewModal(false)}
+                      className="text-gray-400 hover:text-gray-600 p-1"
+                    >
+                      <X className="h-6 w-6" />
+                    </button>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Incident Type</label>
+                        <p className="mt-1 text-sm text-gray-900 capitalize">
+                          {selectedIncident.type.replace('_', ' ')}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Severity</label>
+                        <span className={`mt-1 inline-flex px-2 py-1 text-xs font-semibold rounded-full capitalize ${getSeverityColor(selectedIncident.severity)}`}>
+                          {selectedIncident.severity}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Description</label>
+                      <p className="mt-1 text-sm text-gray-900 whitespace-pre-wrap bg-gray-50 p-3 rounded">
+                        {selectedIncident.description}
+                      </p>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Location</label>
+                        <p className="mt-1 text-sm text-gray-900">{selectedIncident.location}</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Date & Time</label>
+                        <p className="mt-1 text-sm text-gray-900">
+                          {new Date(selectedIncident.date).toLocaleDateString()} at {selectedIncident.time}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Involved Inmates</label>
+                      <div className="mt-1 flex flex-wrap gap-2">
+                        {selectedIncident.involvedInmatesNames?.length > 0 ? (
+                          selectedIncident.involvedInmatesNames.map((name: string, index: number) => (
+                            <span
+                              key={index}
+                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                            >
+                              {name}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="text-gray-400 text-sm">No inmates involved</span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Reported By</label>
+                        <p className="mt-1 text-sm text-gray-900">{selectedIncident.reportedBy}</p>
+                        {selectedIncident.reportedByBadge && (
+                          <p className="text-xs text-gray-500">Badge: {selectedIncident.reportedByBadge}</p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">Status</label>
+                        <span className={`mt-1 inline-flex px-2 py-1 text-xs font-semibold rounded-full capitalize ${getStatusColor(selectedIncident.status)}`}>
+                          {selectedIncident.status}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 flex justify-end space-x-2">
+                    <button
+                      onClick={() => {
+                        setShowViewModal(false);
+                        handleEditIncident(selectedIncident);
+                      }}
+                      className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md hover:bg-green-700 transition-colors"
+                    >
+                      Edit Incident
+                    </button>
+                    <button
+                      onClick={() => setShowViewModal(false)}
+                      className="px-4 py-2 bg-gray-600 text-white text-sm font-medium rounded-md hover:bg-gray-700 transition-colors"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Edit Incident Modal */}
+          {showEditModal && selectedIncident && (
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+              <div className="relative top-10 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white max-h-screen overflow-y-auto">
+                <div className="mt-3">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-medium text-gray-900 flex items-center">
+                      <Edit className="h-5 w-5 text-green-500 mr-2" />
+                      Edit Incident
+                    </h3>
+                    <button
+                      onClick={() => setShowEditModal(false)}
+                      className="text-gray-400 hover:text-gray-600 p-1"
+                    >
+                      <X className="h-6 w-6" />
+                    </button>
+                  </div>
+                  
+                  <form onSubmit={(e) => {
+                    e.preventDefault();
+                    // Here you would implement the update logic
+                    console.log('Update incident:', selectedIncident.id, formData);
+                    setShowEditModal(false);
+                    setSelectedIncident(null);
+                  }} className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Incident Type *
+                        </label>
+                        <select
+                          name="type"
+                          value={formData.type}
+                          onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                          required
+                        >
+                          <option value="">Select type...</option>
+                          <option value="fight">Fight</option>
+                          <option value="contraband">Contraband</option>
+                          <option value="escape_attempt">Escape Attempt</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Severity *
+                        </label>
+                        <select
+                          name="severity"
+                          value={formData.severity}
+                          onChange={(e) => setFormData({ ...formData, severity: e.target.value as any })}
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                          required
+                        >
+                          <option value="">Select severity...</option>
+                          <option value="low">Low</option>
+                          <option value="medium">Medium</option>
+                          <option value="high">High</option>
+                          <option value="critical">Critical</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Description *
+                      </label>
+                      <textarea
+                        name="description"
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        rows={4}
+                        className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                        placeholder="Detailed description of the incident..."
+                        required
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Location *
+                        </label>
+                        <input
+                          type="text"
+                          name="location"
+                          value={formData.location}
+                          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                          placeholder="Cell block, yard, cafeteria, etc."
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Reporter *
+                        </label>
+                        <input
+                          type="text"
+                          name="reportedBy"
+                          value={formData.reportedBy}
+                          onChange={(e) => setFormData({ ...formData, reportedBy: e.target.value })}
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                          placeholder="Officer name"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Date *
+                        </label>
+                        <input
+                          type="date"
+                          name="date"
+                          value={formData.date}
+                          onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Time *
+                        </label>
+                        <input
+                          type="time"
+                          name="time"
+                          value={formData.time}
+                          onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-red-500 focus:border-red-500"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end space-x-2 pt-4">
+                      <button
+                        type="button"
+                        onClick={() => setShowEditModal(false)}
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700 transition-colors"
+                      >
+                        Update Incident
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
           )}
