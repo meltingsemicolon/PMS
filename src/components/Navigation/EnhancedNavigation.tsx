@@ -47,14 +47,8 @@ export const EnhancedNavigation: React.FC = () => {
   const navigation: NavItem[] = [
     {
       name: 'Dashboard',
-      href: '/',
+      href: '/dashboard',
       icon: Home,
-    },
-    {
-      name: 'Enhanced Dashboard',
-      href: '/',
-      icon: BarChart3,
-      badge: stats.criticalIncidents > 0 ? stats.criticalIncidents : undefined,
     },
     {
       name: 'Management',
