@@ -267,13 +267,13 @@ export const ComprehensiveAnalytics: React.FC = () => {
                 outerRadius={120}
                 fill="#8884d8"
                 dataKey="count"
-                label={({ type, percentage }) => `${type}`}
+                label={({ type }) => `${type}`}
               >
                 {medicalTrendsData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip formatter={(value, name) => [value, 'Cases']} />
+              <Tooltip formatter={(value) => [value, 'Cases']} />
             </PieChart>
           </ResponsiveContainer>
         </div>
