@@ -1,15 +1,15 @@
 'use client';
 
 import React from 'react';
-import { EnhancedInmateManagement } from '../../components/Inmates/EnhancedInmateManagement';
+import { AdvancedSearch } from '../../components/Search/AdvancedSearch';
 import { EnhancedNavigation } from '../../components/Navigation/EnhancedNavigation';
 
-export default function InmatesPage() {
+export default function SearchPage() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       <EnhancedNavigation />
       <main className="flex-1 overflow-hidden">
-        <EnhancedInmateManagement />
+        <AdvancedSearch />
       </main>
     </div>
   );

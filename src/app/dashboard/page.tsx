@@ -1,7 +1,7 @@
 'use client';
 
 import ProtectedRoute from '@/components/ProtectedRoute';
-import MainLayout from '@/components/MainLayout';
+import { EnhancedNavigation } from '@/components/Navigation/EnhancedNavigation';
 import { useData } from '@/contexts/DataContext';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -69,8 +69,10 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <MainLayout>
-        <div className="space-y-6">
+      <div className="flex min-h-screen bg-gray-50">
+        <EnhancedNavigation />
+        <main className="flex-1 overflow-hidden">
+          <div className="p-6 space-y-6">
           {/* Welcome Section */}
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between">
@@ -259,7 +261,8 @@ export default function DashboardPage() {
             </div>
           )}
         </div>
-      </MainLayout>
+        </main>
+      </div>
     </ProtectedRoute>
   );
 }
