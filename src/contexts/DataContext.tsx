@@ -74,7 +74,10 @@ export interface SecurityIncident {
   severity: 'low' | 'medium' | 'high' | 'critical';
   status: 'open' | 'investigating' | 'resolved';
   reportedBy: string;
+  reportedById?: string;
+  reportedByBadge?: string;
   involvedInmates: string[];
+  involvedInmatesNames: string[];
 }
 
 export interface Resource {
@@ -1176,17 +1179,50 @@ const mockMedicalRecords: MedicalRecord[] = [
 ];
 
 const mockSecurityIncidents: SecurityIncident[] = [
-  {
+{
     id: '1',
     type: 'fight',
-    description: 'Altercation in cafeteria',
+    description: 'Altercation in cafeteria between two inmates over food',
     location: 'Cafeteria',
     date: '2024-01-10',
     time: '14:30',
     severity: 'medium',
     status: 'resolved',
-    reportedBy: 'Officer Wilson',
-    involvedInmates: ['1', '2']
+    reportedBy: 'Officer Sarah Wilson',
+    reportedById: '1',
+    reportedByBadge: 'OFF-001',
+    involvedInmates: ['1', '2'],
+    involvedInmatesNames: ['John Smith', 'Michael Johnson']
+  },
+  {
+    id: '2',
+    type: 'escape_attempt',
+    description: 'Prisoner attempted to climb perimeter fence during exercise period',
+    location: 'Recreation Yard',
+    date: '2024-01-20',
+    time: '15:45',
+    severity: 'critical',
+    status: 'investigating',
+    reportedBy: 'Officer Mike Davis',
+    reportedById: '2',
+    reportedByBadge: 'OFF-002',
+    involvedInmates: ['3'],
+    involvedInmatesNames: ['Robert Brown']
+  },
+  {
+    id: '3',
+    type: 'contraband',
+    description: 'Cell phone discovered hidden in mattress during routine inspection',
+    location: 'Cell Block B-205',
+    date: '2024-01-25',
+    time: '09:15',
+    severity: 'high',
+    status: 'resolved',
+    reportedBy: 'Officer Lisa Martinez',
+    reportedById: '3',
+    reportedByBadge: 'OFF-003',
+    involvedInmates: ['4'],
+    involvedInmatesNames: ['William Davis']
   }
 ];
 

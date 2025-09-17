@@ -105,6 +105,9 @@ export default function SecurityPage() {
       return;
     }
     
+    // Get inmate names from IDs
+    const involvedInmatesNames = formData.involvedInmates.map(inmateId => getInmateName(inmateId));
+    
     const newIncident = {
       type: formData.type as 'fight' | 'contraband' | 'escape_attempt' | 'other',
       description: formData.description,
@@ -114,6 +117,7 @@ export default function SecurityPage() {
       severity: formData.severity as 'low' | 'medium' | 'high' | 'critical',
       reportedBy: formData.reportedBy,
       involvedInmates: formData.involvedInmates,
+      involvedInmatesNames: involvedInmatesNames,
       status: 'open' as const
     };
     
@@ -235,6 +239,9 @@ export default function SecurityPage() {
                       Date & Time
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Involved Inmates
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Severity
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -272,6 +279,21 @@ export default function SecurityPage() {
                         <div className="text-gray-500">{incident.time}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {incident.involvedInmatesNames?.length > 0 ? (
+                            incident.involvedInmatesNames.map((name, index) => (
+                              <div key={index} className="mb-1">
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                  {name}
+                                </span>
+                              </div>
+                            ))
+                          ) : (
+                            <span className="text-gray-400">No inmates involved</span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full capitalize ${getSeverityColor(incident.severity)}`}>
                           {incident.severity}
                         </span>
@@ -281,8 +303,11 @@ export default function SecurityPage() {
                           {incident.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {incident.reportedBy}
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{incident.reportedBy}</div>
+                        {incident.reportedByBadge && (
+                          <div className="text-xs text-gray-500">Badge: {incident.reportedByBadge}</div>
+                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
