@@ -2,7 +2,7 @@
 
 import ProtectedRoute from '@/components/ProtectedRoute';
 import MainLayout from '@/components/MainLayout';
-import { useData } from '@/contexts/DataContext';
+import { useData, Staff } from '@/contexts/DataContext';
 import { useState } from 'react';
 import { Search, Plus, Edit, Trash2, Eye, Mail, Phone, X, UserPlus } from 'lucide-react';
 
@@ -16,7 +16,7 @@ export default function StaffPage() {
   const [showAddStaffModal, setShowAddStaffModal] = useState(false);
   const [showEditStaffModal, setShowEditStaffModal] = useState(false);
   const [showViewStaffModal, setShowViewStaffModal] = useState(false);
-  const [selectedStaff, setSelectedStaff] = useState<any>(null);
+  const [selectedStaff, setSelectedStaff] = useState<Staff | null>(null);
   const [staffFormData, setStaffFormData] = useState({
     employeeId: '',
     firstName: '',
@@ -47,7 +47,7 @@ export default function StaffPage() {
     setShowAddStaffModal(true);
   };
 
-  const handleEditStaff = (staffMember: any) => {
+  const handleEditStaff = (staffMember: Staff) => {
     setSelectedStaff(staffMember);
     setStaffFormData({
       employeeId: staffMember.employeeId,
@@ -64,12 +64,12 @@ export default function StaffPage() {
     setShowEditStaffModal(true);
   };
 
-  const handleViewStaff = (staffMember: any) => {
+  const handleViewStaff = (staffMember: Staff) => {
     setSelectedStaff(staffMember);
     setShowViewStaffModal(true);
   };
 
-  const handleDeleteStaff = (staffMember: any) => {
+  const handleDeleteStaff = (staffMember: Staff) => {
     if (window.confirm(`Are you sure you want to delete ${staffMember.firstName} ${staffMember.lastName}?`)) {
       deleteStaff(staffMember.id);
     }
@@ -193,7 +193,7 @@ export default function StaffPage() {
                 <input
                   type="text"
                   placeholder="Search by name, ID, or position..."
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 focus:text-black sm:text-sm"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -202,7 +202,7 @@ export default function StaffPage() {
             
             <div className="flex space-x-2">
               <select
-                className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                className="block w-full pl-3 pr-10 py-2 text-gray-900 font-medium text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black sm:text-sm rounded-md"
                 value={departmentFilter}
                 onChange={(e) => setDepartmentFilter(e.target.value)}
               >
@@ -214,7 +214,7 @@ export default function StaffPage() {
               </select>
               
               <select
-                className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                className="block w-full pl-3 pr-10 py-2 text-gray-900 font-medium text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black sm:text-sm rounded-md"
                 value={shiftFilter}
                 onChange={(e) => setShiftFilter(e.target.value)}
               >
@@ -364,7 +364,7 @@ export default function StaffPage() {
                           type="text"
                           value={staffFormData.employeeId}
                           onChange={(e) => setStaffFormData({ ...staffFormData, employeeId: e.target.value })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           placeholder="EMP001"
                           required
                         />
@@ -376,7 +376,7 @@ export default function StaffPage() {
                         <select
                           value={staffFormData.department}
                           onChange={(e) => setStaffFormData({ ...staffFormData, department: e.target.value })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           required
                         >
                           <option value="">Select department...</option>
@@ -397,7 +397,7 @@ export default function StaffPage() {
                           type="text"
                           value={staffFormData.firstName}
                           onChange={(e) => setStaffFormData({ ...staffFormData, firstName: e.target.value })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           placeholder="John"
                           required
                         />
@@ -410,7 +410,7 @@ export default function StaffPage() {
                           type="text"
                           value={staffFormData.lastName}
                           onChange={(e) => setStaffFormData({ ...staffFormData, lastName: e.target.value })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           placeholder="Doe"
                           required
                         />
@@ -426,7 +426,7 @@ export default function StaffPage() {
                           type="text"
                           value={staffFormData.position}
                           onChange={(e) => setStaffFormData({ ...staffFormData, position: e.target.value })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           placeholder="Security Officer"
                           required
                         />
@@ -438,7 +438,7 @@ export default function StaffPage() {
                         <select
                           value={staffFormData.shift || ''}
                           onChange={(e) => setStaffFormData({ ...staffFormData, shift: e.target.value as 'day' | 'night' | 'rotating' })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           required
                         >
                           <option value="">Select shift...</option>
@@ -461,7 +461,7 @@ export default function StaffPage() {
                             ...staffFormData, 
                             contactInfo: { ...staffFormData.contactInfo, email: e.target.value }
                           })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           placeholder="john.doe@prison.gov"
                           required
                         />
@@ -477,7 +477,7 @@ export default function StaffPage() {
                             ...staffFormData, 
                             contactInfo: { ...staffFormData.contactInfo, phone: e.target.value }
                           })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           placeholder="+1234567890"
                           required
                         />
@@ -533,7 +533,7 @@ export default function StaffPage() {
                           type="text"
                           value={staffFormData.employeeId}
                           onChange={(e) => setStaffFormData({ ...staffFormData, employeeId: e.target.value })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           required
                         />
                       </div>
@@ -544,7 +544,7 @@ export default function StaffPage() {
                         <select
                           value={staffFormData.department}
                           onChange={(e) => setStaffFormData({ ...staffFormData, department: e.target.value })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           required
                         >
                           <option value="">Select department...</option>
@@ -565,7 +565,7 @@ export default function StaffPage() {
                           type="text"
                           value={staffFormData.firstName}
                           onChange={(e) => setStaffFormData({ ...staffFormData, firstName: e.target.value })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           required
                         />
                       </div>
@@ -577,7 +577,7 @@ export default function StaffPage() {
                           type="text"
                           value={staffFormData.lastName}
                           onChange={(e) => setStaffFormData({ ...staffFormData, lastName: e.target.value })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           required
                         />
                       </div>
@@ -592,7 +592,7 @@ export default function StaffPage() {
                           type="text"
                           value={staffFormData.position}
                           onChange={(e) => setStaffFormData({ ...staffFormData, position: e.target.value })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           required
                         />
                       </div>
@@ -603,7 +603,7 @@ export default function StaffPage() {
                         <select
                           value={staffFormData.shift || ''}
                           onChange={(e) => setStaffFormData({ ...staffFormData, shift: e.target.value as 'day' | 'night' | 'rotating' })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           required
                         >
                           <option value="">Select shift...</option>
@@ -626,7 +626,7 @@ export default function StaffPage() {
                             ...staffFormData, 
                             contactInfo: { ...staffFormData.contactInfo, email: e.target.value }
                           })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           required
                         />
                       </div>
@@ -641,7 +641,7 @@ export default function StaffPage() {
                             ...staffFormData, 
                             contactInfo: { ...staffFormData.contactInfo, phone: e.target.value }
                           })}
-                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                          className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:text-black"
                           required
                         />
                       </div>

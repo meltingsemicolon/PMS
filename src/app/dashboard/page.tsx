@@ -2,7 +2,7 @@
 
 import ProtectedRoute from '@/components/ProtectedRoute';
 import MainLayout from '@/components/MainLayout';
-import { useData } from '@/contexts/DataContext';
+import { useData, Staff } from '@/contexts/DataContext';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   Users,
@@ -37,7 +37,7 @@ export default function DashboardPage() {
   const [showAddStaffModal, setShowAddStaffModal] = useState(false);
   const [showEditStaffModal, setShowEditStaffModal] = useState(false);
   const [showViewStaffModal, setShowViewStaffModal] = useState(false);
-  const [selectedStaff, setSelectedStaff] = useState<any>(null);
+  const [selectedStaff, setSelectedStaff] = useState<Staff | null>(null);
   const [staffFormData, setStaffFormData] = useState({
     employeeId: '',
     firstName: '',
@@ -90,7 +90,7 @@ export default function DashboardPage() {
     setShowAddStaffModal(true);
   };
 
-  const handleEditStaff = (staffMember: any) => {
+  const handleEditStaff = (staffMember: Staff) => {
     setSelectedStaff(staffMember);
     setStaffFormData({
       employeeId: staffMember.employeeId,
@@ -107,12 +107,12 @@ export default function DashboardPage() {
     setShowEditStaffModal(true);
   };
 
-  const handleViewStaff = (staffMember: any) => {
+  const handleViewStaff = (staffMember: Staff) => {
     setSelectedStaff(staffMember);
     setShowViewStaffModal(true);
   };
 
-  const handleDeleteStaff = (staffMember: any) => {
+  const handleDeleteStaff = (staffMember: Staff) => {
     if (window.confirm(`Are you sure you want to delete ${staffMember.firstName} ${staffMember.lastName}?`)) {
       deleteStaff(staffMember.id);
     }
@@ -410,7 +410,7 @@ export default function DashboardPage() {
                   <div className="flex justify-between items-center">
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">Staff Management</h3>
-                      <p className="text-sm text-gray-600">Manage your facility's staff members</p>
+                      <p className="text-sm text-gray-600">Manage your facility&apos;s staff members</p>
                     </div>
                     <button 
                       onClick={handleAddStaff}

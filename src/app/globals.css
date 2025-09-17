@@ -26,3 +26,55 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Global Input Styling - Dark Text */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="search"],
+select,
+textarea {
+  color: #111827 !important; /* text-gray-900 equivalent - very dark gray */
+  font-weight: 500 !important; /* font-medium */
+}
+
+/* Placeholder text styling */
+input::placeholder,
+textarea::placeholder,
+select::placeholder {
+  color: #6B7280 !important; /* text-gray-500 */
+  font-weight: 400 !important; /* font-normal */
+}
+
+/* Focused input text - even darker */
+input:focus,
+select:focus,
+textarea:focus {
+  color: #000000 !important; /* Pure black when focused */
+  font-weight: 600 !important; /* font-semibold when focused */
+}
+
+/* Select option styling */
+select option {
+  color: #111827 !important; /* Dark text for options */
+  background-color: #ffffff !important; /* White background for options */
+}
+
+/* Disabled input styling */
+input:disabled,
+select:disabled,
+textarea:disabled {
+  color: #6B7280 !important; /* text-gray-500 for disabled */
+  font-weight: 400 !important;
+}
+
+/* File input styling */
+input[type="file"] {
+  color: #111827 !important;
+  font-weight: 500 !important;
+}

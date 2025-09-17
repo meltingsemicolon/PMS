@@ -4,19 +4,14 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import MainLayout from '@/components/MainLayout';
 import { useData } from '@/contexts/DataContext';
 import { useState } from 'react';
-import { FileText, Download, Calendar, Filter, BarChart3, PieChart, TrendingUp, Users, AlertTriangle, Heart } from 'lucide-react';
+import { FileText, Download, BarChart3, Users, AlertTriangle, Heart } from 'lucide-react';
 
 export default function ReportsPage() {
-  const { inmates, visitors, securityIncidents, medicalRecords } = useData();
+  const { inmates, visitors, securityIncidents } = useData();
   const [selectedReport, setSelectedReport] = useState('');
   const [dateRange, setDateRange] = useState({
     start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days ago
     end: new Date().toISOString().split('T')[0]
-  });
-  const [filters, setFilters] = useState({
-    status: '',
-    cellBlock: '',
-    severity: ''
   });
 
   const reportTypes = [

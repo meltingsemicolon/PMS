@@ -2,9 +2,9 @@
 
 import ProtectedRoute from '@/components/ProtectedRoute';
 import MainLayout from '@/components/MainLayout';
-import { useData } from '@/contexts/DataContext';
+import { useData, SecurityIncident } from '@/contexts/DataContext';
 import { useState } from 'react';
-import { Search, Plus, Edit, Eye, AlertTriangle, Shield, X } from 'lucide-react';
+import { Search, Edit, Eye, AlertTriangle, X } from 'lucide-react';
 
 export default function SecurityPage() {
   const { securityIncidents, inmates, addSecurityIncident } = useData();
@@ -13,7 +13,7 @@ export default function SecurityPage() {
   const [statusFilter, setStatusFilter] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [expandedDescriptions, setExpandedDescriptions] = useState<Set<string>>(new Set());
-  const [selectedIncident, setSelectedIncident] = useState<any>(null);
+  const [selectedIncident, setSelectedIncident] = useState<SecurityIncident | null>(null);
   const [showViewModal, setShowViewModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -37,12 +37,12 @@ export default function SecurityPage() {
     setExpandedDescriptions(newExpanded);
   };
 
-  const handleViewIncident = (incident: any) => {
+  const handleViewIncident = (incident: SecurityIncident) => {
     setSelectedIncident(incident);
     setShowViewModal(true);
   };
 
-  const handleEditIncident = (incident: any) => {
+  const handleEditIncident = (incident: SecurityIncident) => {
     setSelectedIncident(incident);
     setFormData({
       type: incident.type,
@@ -738,7 +738,7 @@ export default function SecurityPage() {
                         <select
                           name="type"
                           value={formData.type}
-                          onChange={(e) => setFormData({ ...formData, type: e.target.value as any })}
+                          onChange={(e) => setFormData({ ...formData, type: e.target.value as 'fight' | 'contraband' | 'escape_attempt' | 'other' })}
                           className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-red-500 focus:border-red-500"
                           required
                         >
@@ -756,7 +756,7 @@ export default function SecurityPage() {
                         <select
                           name="severity"
                           value={formData.severity}
-                          onChange={(e) => setFormData({ ...formData, severity: e.target.value as any })}
+                          onChange={(e) => setFormData({ ...formData, severity: e.target.value as 'low' | 'medium' | 'high' | 'critical' })}
                           className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-red-500 focus:border-red-500"
                           required
                         >
