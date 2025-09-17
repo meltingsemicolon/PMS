@@ -47,12 +47,12 @@ export const EnhancedNavigation: React.FC = () => {
   const navigation: NavItem[] = [
     {
       name: 'Dashboard',
-      href: '/dashboard',
+      href: '/',
       icon: Home,
     },
     {
       name: 'Enhanced Dashboard',
-      href: '/enhanced-dashboard',
+      href: '/',
       icon: BarChart3,
       badge: stats.criticalIncidents > 0 ? stats.criticalIncidents : undefined,
     },
@@ -69,7 +69,7 @@ export const EnhancedNavigation: React.FC = () => {
         },
         {
           name: 'Enhanced Inmates',
-          href: '/enhanced-inmates',
+          href: '/inmates',
           icon: Users,
           badge: stats.totalInmates,
         },
@@ -124,20 +124,25 @@ export const EnhancedNavigation: React.FC = () => {
         },
         {
           name: 'Advanced Analytics',
-          href: '/comprehensive-analytics',
+          href: '/analytics',
           icon: BarChart3,
         },
         {
           name: 'Data Management',
-          href: '/data-management',
+          href: '/data',
           icon: Database,
         },
       ],
     },
     {
       name: 'Search',
-      href: '/advanced-search',
+      href: '/search',
       icon: Search,
+    },
+    {
+      name: 'Demo',
+      href: '/demo',
+      icon: Eye,
     },
     {
       name: 'Settings',
